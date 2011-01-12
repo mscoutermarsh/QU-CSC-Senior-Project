@@ -11,15 +11,15 @@ configure do
   begin
     ActiveRecord::Schema.define do
       create_table :pets do |t|
-        t.name :null => false
-        t.color :null => false
+        t.text :name, :null => false
+        t.text :color, :null => false
 
         # mood and hunger default to 75
-        t.hunger :default => 75
-        t.mood :default => 75
+        t.integer :hunger, :default => 75
+        t.integer :mood, :default => 75
 
         t.timestamps
-        t.owner :null => false
+        t.text :owner, :null => false
       end
     end
   rescue ActiveRecord::StatementInvalid
@@ -31,15 +31,16 @@ configure do
 end
 
 class Pet < ActiveRecord::Base
-  validates_presence_of :name, :owner, :color
-  validates_numericality_of :mood, :only_integer => true, :greater_than_or_equal_to => 0,
-                            :less_that_or_equal_to => 100
-  validates_numericality_of :hunger, :only_integer => true, :greater_than_or_equal_to => 0,
-                            :less_that_or_equal_to => 100
+
+attr_accessible :name, :owner, :mood, :color, :hunger
+#  validates_presence_of :name, :owner, :color
+#  validates_numericality_of :mood, :only_integer => true, :greater_than_or_equal_to => 0,
+#                            :less_that_or_equal_to => 100
+#  validates_numericality_of :hunger, :only_integer => true, :greater_than_or_equal_to => 0,
+#                            :less_that_or_equal_to => 100
 
 
-  named_scope :recent, {:limit => 10, :order => 'updated_at
-DESC'}
+  named_scope :recent, {:limit => 10, :order => 'updated_at DESC'}
 end
 
 helpers do
@@ -85,7 +86,10 @@ helpers do
 end
 
 post '/pets' do
-  pet = Pet.new(:name => params[:name], :color => params[:color], :owner => params[:owner])
+  pet = Pet.new(:name => params[:name], :color => params[:color], :owner => 1)
+  #pet.name = params[:name]
+  #pet.color = params[:color]
+  #pet.owner = 1
   if pet.save
     status(201)
     response['Location'] = Pet_url(pet)
