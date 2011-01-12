@@ -32,12 +32,12 @@ end
 
 class Pet < ActiveRecord::Base
 
-attr_accessible :name, :owner, :mood, :color, :hunger
-#  validates_presence_of :name, :owner, :color
-#  validates_numericality_of :mood, :only_integer => true, :greater_than_or_equal_to => 0,
-#                            :less_that_or_equal_to => 100
-#  validates_numericality_of :hunger, :only_integer => true, :greater_than_or_equal_to => 0,
-#                            :less_that_or_equal_to => 100
+  attr_accessible :name, :owner, :mood, :color, :hunger
+  validates_presence_of :name, :owner, :color
+  validates_numericality_of :mood, :only_integer => true, :greater_than_or_equal_to => 0,
+                            :less_that_or_equal_to => 100
+  validates_numericality_of :hunger, :only_integer => true, :greater_than_or_equal_to => 0,
+                            :less_that_or_equal_to => 100
 
 
   named_scope :recent, {:limit => 10, :order => 'updated_at DESC'}
@@ -54,34 +54,34 @@ helpers do
   end
 
   def pet_url(pet)
-    "#{base_url}pets/#{pet.id}"
+    "#{base_url}pets/#{pet.id}.xml"
   end
 
   def rfc_3339(timestamp)
     timestamp.strftime("%Y-%m-%dT%H:%M:%SZ")
   end
 
-  def protected!
-    auth = Rack::Auth::Basic::Request.new(request.env)
-
-    # Request a username/password if the user does not send one
-    unless auth.provided?
-      response['WWW-Authenticate'] = %Q{Basic Realm="Shortener"}
-      throw :halt, [401, 'Authorization Required']
-    end
-
-    # A request with non-basic auth is a bad request
-    unless auth.basic?
-      throw :halt, [400, 'Bad Request']
-    end
-
-    # Authentication is well-formed, check the credentials
-    if auth.provided? && CREDENTIALS == auth.credentials
-      return true
-    else
-      throw :halt, [403, 'Forbidden']
-    end
-  end
+#  def protected!
+#    auth = Rack::Auth::Basic::Request.new(request.env)
+#
+#    # Request a username/password if the user does not send one
+#    unless auth.provided?
+#      response['WWW-Authenticate'] = %Q{Basic Realm="Shortener"}
+#      throw :halt, [401, 'Authorization Required']
+#    end
+#
+#    # A request with non-basic auth is a bad request
+#    unless auth.basic?
+#      throw :halt, [400, 'Bad Request']
+#    end
+#
+#    # Authentication is well-formed, check the credentials
+#    if auth.provided? && CREDENTIALS == auth.credentials
+#      return true
+#    else
+#      throw :halt, [403, 'Forbidden']
+#    end
+#  end
 
 end
 
@@ -92,7 +92,7 @@ post '/pets' do
   #pet.owner = 1
   if pet.save
     status(201)
-    response['Location'] = Pet_url(pet)
+    #response['Location'] = Pet_url(pet)
 
     "Created new pet #{pet.id} with color \"#{pet.color}\"\n"
   else
@@ -103,17 +103,17 @@ post '/pets' do
 end
 
 get '/pets/:id.:format' do
-  Pet = Pet.find(params[:id])
+  pet = Pet.find(params[:id])
   case params[:format]
   when 'xml'
     content_type :xml
-    Pet.to_xml
+    pet.to_xml
   when 'json'
     content_type('application/json')
-    Pet.to_json
+    pet.to_json
   else
     content_type :json
-    Pet.to_json
+    pet.to_json
   end
 end
 
