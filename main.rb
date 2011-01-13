@@ -102,6 +102,24 @@ post '/pets' do
   end
 end
 
+put '/pets/:id/feed' do
+  pet = Pet.find(params[:id])
+  if pet.hunger < 100 then
+    if pet.hunger < 50 then
+      pet.hunger = pet.hunger + 50
+    else if pet.hunger < 75 then
+        pet.hunger = pet.hunger + 25
+    else
+      pet.hunger = 100
+    end
+    if pet.save
+      status(202)
+    else
+      status(412)
+      "Pet could not be found.\n"
+    end
+end
+
 get '/pets/:id.:format' do
   pet = Pet.find(params[:id])
   case params[:format]
