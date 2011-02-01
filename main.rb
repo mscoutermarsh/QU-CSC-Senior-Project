@@ -1,47 +1,23 @@
 require 'rubygems'
 require 'sinatra'
-require 'activerecord'
+require 'dm-core'
+require 'dm-migrations'
+require 'dm-validations'
+require 'dm-timestamps'
 
-configure do
+#### pet API
 
-  ActiveRecord::Base.establish_connection(
-    :adapter => 'sqlite3',
-    :database => 'pets.sqlite3')
+# Import all Models
+Dir.glob("#{Dir.pwd}/models/*.rb") { |m| require "#{m.chomp}" }
 
-  begin
-    ActiveRecord::Schema.define do
-      create_table :pets do |t|
-        t.text :name, :null => false
-        t.text :color, :null => false
+#Set up database
+DataMapper::setup(:default, "sqlite3://#{Dir.pwd}/pets.sqlite3")
 
-        # mood and hunger default to 75
-        t.integer :hunger, :default => 75
-        t.integer :mood, :default => 75
+# Initialize (finalize) db
+DataMapper.finalize
 
-        t.timestamps
-        t.text :owner, :null => false
-      end
-    end
-  rescue ActiveRecord::StatementInvalid
-    # Do nothing, since the schema already exists
-  end
-
-  CREDENTIALS = ['mike', 'c']
-
-end
-
-class Pet < ActiveRecord::Base
-
-  attr_accessible :name, :owner, :mood, :color, :hunger
-  validates_presence_of :name, :owner, :color
-  validates_numericality_of :mood, :only_integer => true, :greater_than_or_equal_to => 0,
-                            :less_that_or_equal_to => 100
-  validates_numericality_of :hunger, :only_integer => true, :greater_than_or_equal_to => 0,
-                            :less_that_or_equal_to => 100
-
-
-  named_scope :recent, {:limit => 10, :order => 'updated_at DESC'}
-end
+# Create the db/tables if they don't exist
+DataMapper::auto_upgrade!
 
 helpers do
 
@@ -87,9 +63,6 @@ end
 
 post '/pets' do
   pet = Pet.new(:name => params[:name], :color => params[:color], :owner => 1)
-  #pet.name = params[:name]
-  #pet.color = params[:color]
-  #pet.owner = 1
   if pet.save
     status(201)
     #response['Location'] = Pet_url(pet)
@@ -112,6 +85,10 @@ post '/pets' do
   end
 end
 
+# PUT
+# Feed pet
+#
+
 put '/pets/:id/feed' do
   pet = Pet.find(params[:id])
   if pet.hunger < 100 then
@@ -131,6 +108,10 @@ put '/pets/:id/feed' do
   end
   end
 end
+
+# GET
+# pet data in json or XML
+#
 
 get '/pets/:id.:format' do
   pet = Pet.find(params[:id])
@@ -177,12 +158,7 @@ delete '/pets' do
   status(204)
 end
 
-error ActiveRecord::RecordNotFound do
-  status(404)
-  @msg = "record not found\n"
-end
-
 not_found do
   status(404)
-  @msg || "404\n"
+  @msg || "404 sorry\n"
 end
