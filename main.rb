@@ -2,8 +2,10 @@ require 'rubygems'
 require 'sinatra'
 require 'dm-core'
 require 'dm-migrations'
-require 'dm-validations'
 require 'dm-timestamps'
+require 'dm-serializer/to_json'
+require 'dm-serializer/to_xml'
+require 'dm-validations'
 
 #### pet API
 
@@ -61,6 +63,10 @@ helpers do
 
 end
 
+# POST
+# Create pet
+#
+
 post '/pets' do
   pet = Pet.new(:name => params[:name], :color => params[:color], :owner => 1)
   if pet.save
@@ -89,7 +95,7 @@ end
 # Feed pet
 #
 
-put '/pets/:id/feed' do
+put '/pets/:id/feed/?' do
   pet = Pet.find(params[:id])
   if pet.hunger < 100 then
     if pet.hunger < 50 then
@@ -113,14 +119,20 @@ end
 # pet data in json or XML
 #
 
-get '/pets/:id.:format' do
+get '/pets/?' do
+  @pets = Pet.all()
+  content_type :json
+  @pets.to_json
+end
+
+get '/pets/:id.:format?/?' do
   pet = Pet.find(params[:id])
   case params[:format]
   when 'xml'
     content_type :xml
     pet.to_xml
   when 'json'
-    content_type('application/json')
+    content_type :json
     pet.to_json
   else
     content_type :json
@@ -128,34 +140,10 @@ get '/pets/:id.:format' do
   end
 end
 
-put '/pets/:id' do
-  pet = Pet.find(params[:id])
-  pet.body = params[:body]
-  if pet.save
-    status(202)
-    'pet updated'
-  else
-    status(412)
-    "Error updating pet.\n"
-  end
-end
-
-delete '/pets/:id' do
+delete '/pets/:id/?' do
   Pet.destroy(params[:id])
   status(200)
   "Deleted\n"
-end
-
-get '/pets' do
-  pets = Pet.recent.all
-  content_type 'application/json'
-  pets.to_json
-end
-
-delete '/pets' do
-  protected!
-  Pet.delete_all
-  status(204)
 end
 
 not_found do

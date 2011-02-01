@@ -1,3 +1,6 @@
+require 'dm-serializer/to_json'
+require 'dm-serializer/to_xml'
+
 # contains all pet specific data
 
 class Pet
@@ -9,11 +12,11 @@ class Pet
   property :color, String, :required => true
   property :hunger, Integer, :default => 75
   property :mood, Integer, :default => 75
+  property :owner, Integer
   property :cleanliness, Integer, :default =>100
   property :created_at, DateTime
   property :updated_at, DateTime
 
-  attr_accessible :name, :owner, :mood, :color, :hunger, :cleanliness
   validates_presence_of :name, :owner, :color
   validates_numericality_of :mood, :only_integer => true, :greater_than_or_equal_to => 0,
                             :less_that_or_equal_to => 100
@@ -23,5 +26,4 @@ class Pet
                             :less_that_or_equal_to => 100
 
 
-  named_scope :recent, {:limit => 10, :order => 'id DESC'}
 end
