@@ -94,11 +94,21 @@ post '/pets' do
     status(201)
     #response['Location'] = Pet_url(pet)
 
-    "Created new pet #{pet.id} with color \"#{pet.color}\"\n"
+    "Created new pet #{pet.name}(#{pet.id}) with color \"#{pet.color}\"\n"
   else
     status(412)
+    
+    error = "Missing "
 
-    "Fail.\n"
+    if params[:name] == nil and params[:color] == nil then
+      error = error + "name and color parameters."
+    elsif params[:name] == nil then
+      error = error + "name parameter."
+    else
+      error = error + "color parameter."
+    end if
+
+    error
   end
 end
 
@@ -118,6 +128,8 @@ put '/pets/:id/feed' do
       status(412)
       "Pet could not be found.\n"
     end
+  end
+  end
 end
 
 get '/pets/:id.:format' do
