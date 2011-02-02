@@ -24,32 +24,33 @@ By default the pet will have a mood of 100, hunger of 75, cleanliness of 75.
 
 For mood, hunger and cleanliness - 100 is good. 0 is bad.
 
-### Get pet data
+-------------
+#### Get pet data
 **Get to:** http://localhost:4567/pets
 
 Returns ALL pet data for every pet in json.
 
-### Get individual pet data
+#### All data for specific pet
 **Get to:** http://localhost:4567/pets/id
 
 Returns pet data for id (integer).
 
-### Get hunger of pet
+#### Hunger
 **Get to:** http://localhost:4567/pets/id/hunger
 
 Returns hunger of pet(id).
 
-### Get mood of pet
+#### Mood
 **Get to:** http://localhost:4567/pets/id/mood
 
 Returns mood of pet(id).
 
-### Get cleanliness of pet
+#### Cleanliness
 **Get to:** http://localhost:4567/pets/id/cleanliness
 
 Returns cleanliness of pet(id).
 
-### Get age of pet
+#### Age
 **Get to:** http://localhost:4567/pets/id/age
 
 Returns age of pet(id) in minutes.
