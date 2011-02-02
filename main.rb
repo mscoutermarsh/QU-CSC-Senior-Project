@@ -5,6 +5,7 @@ require 'dm-serializer/to_json'
 require 'dm-migrations'
 require 'dm-timestamps'
 require 'dm-validations'
+require 'date'
 
 #### pet API
 
@@ -16,9 +17,6 @@ DataMapper::setup(:default, "sqlite3://#{Dir.pwd}/pets.sqlite3")
 
 # Initialize (finalize) db
 DataMapper.finalize
-
-# start over
-DataMapper::auto_migrate
 
 # Create the db/tables if they don't exist
 DataMapper::auto_upgrade!
@@ -47,6 +45,7 @@ end
 # Create pet
 #
 
+# name and color required to create pet
 post '/pets' do
   pet = Pet.new(:name => params[:name], :color => params[:color], :owner => 1)
   if pet.save
@@ -72,9 +71,10 @@ post '/pets' do
 end
 
 # PUT
-# Feed pet
+# update pet data
 #
 
+# feed the pet
 put '/pets/:id/feed/?' do
   pet = Pet.find(params[:id])
   if pet.hunger < 100 then
@@ -96,6 +96,7 @@ put '/pets/:id/feed/?' do
   end
 end
 
+# clean the pet
 put '/pets/:id/clean/?' do
   pet = Pet.find(params[:id])
   if pet.cleanliness < 100 then
@@ -121,16 +122,41 @@ end
 # pet data in json
 #
 
+# return all pets data
 get '/pets/?' do
   @pets = Pet.all()
   content_type :json
   @pets.to_json
 end
 
+# return all of pets data
 get '/pets/:id/?' do
   pet = Pet.get!(params[:id])
   content_type :json
   pet.to_json
+end
+
+# return pets hunger
+get '/pets/:id/hunger/?' do
+  pet = Pet.get!(params[:id])
+  content_type :json
+  pet.hunger.to_json
+end
+
+# return pets cleanliness
+get '/pets/:id/cleanliness/?' do
+  pet = Pet.get!(params[:id])
+  content_type :json
+  pet.hunger.to_json
+end
+
+# return pets age
+get '/pets/:id/age/?' do
+  pet = Pet.get!(params[:id])
+  today = DateTime.now
+  age = (today - pet.created_at)
+  content_type :json
+  ((age * 24 * 60).to_i).to_json
 end
 
 delete '/pets/:id/?' do
