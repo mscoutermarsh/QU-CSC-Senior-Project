@@ -1,5 +1,4 @@
-require 'dm-serializer/to_json'
-require 'dm-serializer/to_xml'
+
 
 # contains all owner (users) specific data
 

@@ -1,10 +1,9 @@
 require 'rubygems'
 require 'sinatra'
 require 'dm-core'
+require 'dm-serializer/to_json'
 require 'dm-migrations'
 require 'dm-timestamps'
-require 'dm-serializer/to_json'
-require 'dm-serializer/to_xml'
 require 'dm-validations'
 
 #### pet API
@@ -17,6 +16,9 @@ DataMapper::setup(:default, "sqlite3://#{Dir.pwd}/pets.sqlite3")
 
 # Initialize (finalize) db
 DataMapper.finalize
+
+# start over
+DataMapper::auto_migrate
 
 # Create the db/tables if they don't exist
 DataMapper::auto_upgrade!
@@ -38,28 +40,6 @@ helpers do
   def rfc_3339(timestamp)
     timestamp.strftime("%Y-%m-%dT%H:%M:%SZ")
   end
-
-#  def protected!
-#    auth = Rack::Auth::Basic::Request.new(request.env)
-#
-#    # Request a username/password if the user does not send one
-#    unless auth.provided?
-#      response['WWW-Authenticate'] = %Q{Basic Realm="Shortener"}
-#      throw :halt, [401, 'Authorization Required']
-#    end
-#
-#    # A request with non-basic auth is a bad request
-#    unless auth.basic?
-#      throw :halt, [400, 'Bad Request']
-#    end
-#
-#    # Authentication is well-formed, check the credentials
-#    if auth.provided? && CREDENTIALS == auth.credentials
-#      return true
-#    else
-#      throw :halt, [403, 'Forbidden']
-#    end
-#  end
 
 end
 
@@ -107,6 +87,28 @@ put '/pets/:id/feed/?' do
     end
     if pet.save
       status(202)
+      "Pet #{pet.name}(#{pet.id}) fed. now has a hunger of \"#{pet.hunger}\"\n"
+    else
+      status(412)
+      "Pet could not be found.\n"
+    end
+  end
+  end
+end
+
+put '/pets/:id/clean/?' do
+  pet = Pet.find(params[:id])
+  if pet.cleanliness < 100 then
+    if pet.cleanliness < 50 then
+      pet.cleanliness = pet.cleanliness + 50
+    else if pet.cleanliness < 75 then
+        pet.cleanliness = pet.cleanliness + 25
+    else
+      pet.cleanliness = 100
+    end
+    if pet.save
+      status(202)
+      "Pet #{pet.name}(#{pet.id}) cleaned. now has a cleanliness of \"#{pet.cleanliness}\"\n"
     else
       status(412)
       "Pet could not be found.\n"
@@ -116,7 +118,7 @@ put '/pets/:id/feed/?' do
 end
 
 # GET
-# pet data in json or XML
+# pet data in json
 #
 
 get '/pets/?' do
@@ -125,19 +127,10 @@ get '/pets/?' do
   @pets.to_json
 end
 
-get '/pets/:id.:format?/?' do
-  pet = Pet.find(params[:id])
-  case params[:format]
-  when 'xml'
-    content_type :xml
-    pet.to_xml
-  when 'json'
-    content_type :json
-    pet.to_json
-  else
-    content_type :json
-    pet.to_json
-  end
+get '/pets/:id/?' do
+  pet = Pet.get!(params[:id])
+  content_type :json
+  pet.to_json
 end
 
 delete '/pets/:id/?' do
