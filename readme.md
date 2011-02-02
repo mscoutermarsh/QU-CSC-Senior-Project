@@ -17,51 +17,58 @@ Each pet contains the following attributes:
 + created_at (datetime)
 + updated_at (datetime)
 
+POST
+----
+
 ### Create a new pet
-**Post to:** http://localhost:4567/pets
+Post: http://localhost:4567/pets
 **Params required:** name (string) and color (string)
 By default the pet will have a mood of 100, hunger of 75, cleanliness of 75.
 
 For mood, hunger and cleanliness - 100 is good. 0 is bad.
 
-### Get pet data
-**Get to:** http://localhost:4567/pets
+GET
+---
+
+## Get pet data
+Get: http://localhost:4567/pets
 
 Returns ALL pet data for every pet in json.
 
-#### All data for specific pet
-**Get to:** http://localhost:4567/pets/id
+### All data for specific pet
+`Get: http://localhost:4567/pets/id`
 
 Returns pet data for id (integer).
 
-#### Hunger
-**Get to:** http://localhost:4567/pets/id/hunger
+### Hunger
+`Get: http://localhost:4567/pets/id/hunger`
 
 Returns hunger of pet(id).
 
-#### Mood
-**Get to:** http://localhost:4567/pets/id/mood
+### Mood
+`Get: http://localhost:4567/pets/id/mood`
 
 Returns mood of pet(id).
 
 #### Cleanliness
-**Get to:** http://localhost:4567/pets/id/cleanliness
+`Get: http://localhost:4567/pets/id/cleanliness`
 
 Returns cleanliness of pet(id).
 
 #### Age
-**Get to:** http://localhost:4567/pets/id/age
+`Get: http://localhost:4567/pets/id/age`
 
 Returns age of pet(id) in minutes.
 
-### Perform actions on pet
+PUT
+---
 
-#### Clean
-**Put to:** http://localhost:4567/pets/id/clean
+### Clean
+`Put: http://localhost:4567/pets/id/clean`
 
-#### Feed
-**Put to:** http://localhost:4567/pets/id/feed
+### Feed
+`Put: http://localhost:4567/pets/id/feed`
 
-#### Play
-**Put to:** http://localhost:4567/pets/id/play
+### Play
+`Put: http://localhost:4567/pets/id/play`
 
