@@ -34,12 +34,13 @@ GET
 ---
 
 #### Get pet data
-Get: http://localhost:4567/pets
+`Get: http://localhost:4567/pets`
 
 -Returns ALL pet data for every pet in json.
 
 #### All data for specific pet
 `Get: http://localhost:4567/pets/id`
+
 -Returns pet data for id (integer).
 
 #### Hunger
