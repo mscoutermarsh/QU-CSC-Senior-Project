@@ -8,21 +8,24 @@ Documentation
 -------------
 
 Each pet contains the following attributes:
-+name (string)
-+owner (integer)
-+color (string)
-+mood (integer)
-+hunger (integer)
-+cleanliness (integer)
-+created_at (datetime)
-+updated_at (datetime)
+
++   name (string)
++   owner (integer)
++   color (string)
++   mood (integer)
++   hunger (integer)
++   cleanliness (integer)
++   created_at (datetime)
++   updated_at (datetime)
 
 POST
 ----
 
 ### Create a new pet
-Post: http://localhost:4567/pets
-**Params required:** name (string) and color (string)
+`Post: http://localhost:4567/pets`
+
+**Params required:** name (string) and color (string).
+
 By default the pet will have a mood of 100, hunger of 75, cleanliness of 75.
 
 For mood, hunger and cleanliness - 100 is good. 0 is bad.
