@@ -8,14 +8,14 @@ Documentation
 -------------
 
 Each pet contains the following attributes:
-+ name (string)
-+ owner (integer)
-+ color (string)
-+ mood (integer)
-+ hunger (integer)
-+ cleanliness (integer)
-+ created_at (datetime)
-+ updated_at (datetime)
++name (string)
++owner (integer)
++color (string)
++mood (integer)
++hunger (integer)
++cleanliness (integer)
++created_at (datetime)
++updated_at (datetime)
 
 POST
 ----
@@ -30,35 +30,34 @@ For mood, hunger and cleanliness - 100 is good. 0 is bad.
 GET
 ---
 
-## Get pet data
+#### Get pet data
 Get: http://localhost:4567/pets
 
-Returns ALL pet data for every pet in json.
+-Returns ALL pet data for every pet in json.
 
-### All data for specific pet
+#### All data for specific pet
 `Get: http://localhost:4567/pets/id`
+-Returns pet data for id (integer).
 
-Returns pet data for id (integer).
-
-### Hunger
+#### Hunger
 `Get: http://localhost:4567/pets/id/hunger`
 
-Returns hunger of pet(id).
+-Returns hunger of pet(id).
 
-### Mood
+#### Mood
 `Get: http://localhost:4567/pets/id/mood`
 
-Returns mood of pet(id).
+-Returns mood of pet(id).
 
 #### Cleanliness
 `Get: http://localhost:4567/pets/id/cleanliness`
 
-Returns cleanliness of pet(id).
+-Returns cleanliness of pet(id).
 
 #### Age
 `Get: http://localhost:4567/pets/id/age`
 
-Returns age of pet(id) in minutes.
+-Returns age of pet(id) in minutes.
 
 PUT
 ---
