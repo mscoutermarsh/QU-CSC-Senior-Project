@@ -7,6 +7,7 @@ require 'dm-timestamps'
 require 'dm-validations'
 require 'date'
 require 'digest/sha1'
+require 'dm-postgres-adapter'
 
 #### pet API
 
@@ -51,7 +52,7 @@ end
 #
 
 # name and color required to create pet
-post '/pet' do
+post '/pet/?' do
   #gen new API key
   api_key = Digest::SHA1.hexdigest(Time.now.to_s + rand(12341234).to_s)[1..12]
 
