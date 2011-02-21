@@ -14,7 +14,7 @@ require 'digest/sha1'
 Dir.glob("#{Dir.pwd}/models/*.rb") { |m| require "#{m.chomp}" }
 
 # Set up database
-DataMapper::setup(:default, "sqlite3://#{Dir.pwd}/pets.sqlite3")
+DataMapper.setup(:default, ENV['DATABASE_URL'] || "sqlite3://#{Dir.pwd}/pets.db")
 
 # Initialize (finalize) db
 DataMapper.finalize
