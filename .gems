@@ -4,5 +4,4 @@
 'dm-migrations'
 'dm-timestamps'
 'dm-validations'
-'date'
-'digest/sha1'
+'digest'
