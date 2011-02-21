@@ -4,3 +4,4 @@
 'dm-migrations'
 'dm-timestamps'
 'dm-validations'
+'dm-postgres-adapter'
