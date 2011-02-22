@@ -156,8 +156,8 @@ end
 # return all of pets data
 get '/pet/:key/?' do
   pet = Pet.first(:api_key => params[:key])
-  if pet == nil or params[:email]!= pet.email then
-    status(401)
+  if pet == nil then
+    status(404)
 
   else
     content_type :json
@@ -168,8 +168,8 @@ end
 # return pets hunger
 get '/pets/:key/hunger/?' do
   pet = Pet.first(:api_key => params[:key])
-  if pet == nil or params[:email]!= pet.email then
-    status(401)
+  if pet == nil then
+    status(404)
 
   else
     content_type :json
@@ -180,8 +180,8 @@ end
 # return pets cleanliness
 get '/pet/:key/cleanliness/?' do
   pet = Pet.first(:api_key => params[:key])
-  if pet == nil or params[:email]!= pet.email then
-    status(401)
+  if pet == nil then
+    status(404)
 
   else
     content_type :json
@@ -192,7 +192,7 @@ end
 # return pets mood
 get '/pet/:key/mood/?' do
   pet = Pet.first(:api_key => params[:key])
-  if pet == nil or params[:email]!= pet.email then
+  if pet == nil then
     status(401)
 
   else
@@ -204,8 +204,8 @@ end
 # return pets age
 get '/pet/:key/age/?' do
   pet = Pet.first(:api_key => params[:key])
-  if pet == nil or params[:email]!= pet.email then
-    status(401)
+  if pet == nil then
+    status(404)
 
   else
     today = DateTime.now
