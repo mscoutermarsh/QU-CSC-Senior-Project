@@ -64,7 +64,7 @@ GET
 #### Age
 `Get: http://localhost:4567/pets/key/age`
 
--Returns age of pet(id) in minutes.
+-Returns age of pet in minutes.
 
 PUT
 ---

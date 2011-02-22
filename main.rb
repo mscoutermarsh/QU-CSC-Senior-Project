@@ -43,6 +43,11 @@ helpers do
     timestamp.strftime("%Y-%m-%dT%H:%M:%SZ")
   end
 
+  def addToLog(key,action)
+    log = Log.new(:api_key => key, :action => action, :created_at => DateTime.now())
+    log.save
+  end
+
 end
 
 
@@ -90,6 +95,9 @@ put '/pet/:key/feed/?' do
       end
     end
     pet.save
+
+    addToLog(params[:key],"feed")
+
     status(202)
     "Pet #{pet.name}(#{pet.id}) fed. now has a hunger of \"#{pet.hunger}\"\n"
   end
@@ -114,6 +122,9 @@ put '/pet/:key/clean/?' do
       end
     end
     pet.save
+
+    addToLog(params[:key],"clean")
+
     status(202)
     "Pet #{pet.name} cleaned. now has a cleanliness of \"#{pet.cleanliness}\"\n"
   end
@@ -126,17 +137,28 @@ put '/pet/:key/play/?' do
     status(401)
 
   else
-    if pet.mood < 100 then
-      if pet.cleanliness < 50 then
-        pet.cleanliness = pet.cleanliness + 50
-      else if pet.cleanliness < 75 then
-          pet.cleanliness = pet.cleanliness + 25
-        else
-          pet.cleanliness = 100
-        end
-      end
+    # playing with pet increases mood by 25
+    # Also - makes pet dirtier and more hungry.
+    if pet.mood < 75 then
+      pet.mood = pet.mood + 25
+    else
+      pet.mood = 100
     end
+    if pet.cleanliness > 15 then
+      pet.cleanliness = pet.cleanliness - 15
+    else
+      pet.cleanliness = 0
+    end
+    if pet.hunger > 15 then
+      pet.hunger = pet.hunger - 15
+    else
+      pet.hunger = 0
+    end
+
     pet.save
+
+    addToLog(params[:key],"play")
+
     status(202)
     "Pet #{pet.name}(#{pet.id}) cleaned. now has a cleanliness of \"#{pet.cleanliness}\"\n"
   end
@@ -212,6 +234,38 @@ get '/pet/:key/age/?' do
     age = (today - pet.created_at)
     content_type :json
     ((age * 24 * 60).to_i).to_json
+  end
+end
+
+# return pets mood (also calculate mood)
+# mood is 50% cleanliness and hunger
+#      and: 50% based on the time the pet was last played with
+get '/pet/:key/mood/?' do
+  pet = Pet.first(:api_key => params[:key])
+  if pet == nil then
+    status(404)
+
+  else
+    # first 50 points calculated...
+    mood = (pet.cleanliness/4)+(pet.hunger/4)
+    today = DateTime.now
+    age = (today - pet.created_at)
+    age = ((age * 24 * 60).to_i)
+    recentLog = Log.first(:api_key => params[:key], :order => [ :created_at.desc ])
+    minsSince = ((today - recentLog.created_at) * 24 *60).to_i
+
+    moodReduce = (minsSince / 30) * 5 # subtract 5 for every 30 mins
+
+    if moodReduce > pet.mood then
+      pet.mood = 0
+    else
+      pet.mood = pet.mood - moodReduce
+    end
+
+    pet.save
+
+    content_type :json
+    pet.mood.to_json
   end
 end
 
