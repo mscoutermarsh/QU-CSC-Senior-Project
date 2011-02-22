@@ -115,7 +115,7 @@ put '/pet/:key/clean/?' do
     end
     pet.save
     status(202)
-    "Pet #{pet.name}(#{pet.id}) cleaned. now has a cleanliness of \"#{pet.cleanliness}\"\n"
+    "Pet #{pet.name} cleaned. now has a cleanliness of \"#{pet.cleanliness}\"\n"
   end
 end
 
