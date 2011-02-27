@@ -10,6 +10,7 @@ class Pet
   property :color, String, :required => true
   property :hunger, Integer, :default => 75
   property :mood, Integer, :default => 75
+  property :alive, Boolean, :default => true
   property :api_key, String, :required => true, :unique => true, :key => true,
     :messages => {
       :presence  => 'API Key required.',
@@ -18,6 +19,9 @@ class Pet
   property :cleanliness, Integer, :default =>100
   property :created_at, DateTime
   property :updated_at, DateTime
+  property :lastFed, DateTime
+  property :lastCleaned, DateTime
+  property :lastPlayedWith, DateTime
   property :email, String, :required => true,
     :format   => :email_address,
     :messages => {
