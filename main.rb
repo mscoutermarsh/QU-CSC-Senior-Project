@@ -55,11 +55,6 @@ helpers do
     timestamp.strftime("%Y-%m-%dT%H:%M:%SZ")
   end
 
-  def addToLog(key,action)
-    log = Log.new(:api_key => key, :action => action, :created_at => DateTime.now())
-    log.save
-  end
-
   # checks time since pet was last interacted with... reduces
   # mood/cleanliness/hunger
   def updateData(pet)
@@ -83,7 +78,6 @@ helpers do
       pet.mood = hungerCleanMood + (50 - moodReduce)
     end
 
-    $log.debug "new mood:" + (pet.mood).to_s
     ### UPDATE HUNGER
     
     # find last time pet was fed
@@ -130,12 +124,8 @@ post '/pet/?' do
   end
 end
 
-# PUT
-# update pet data
-#
-
 # feed the pet
-put '/pet/:key/feed/?' do
+post '/pet/:key/feed/?' do
   pet = Pet.first(:api_key => params[:key])
   if pet == nil or params[:email]!= pet.email then
     status(401)
@@ -169,7 +159,7 @@ put '/pet/:key/feed/?' do
 end
 
 # clean the pet
-put '/pet/:key/clean/?' do
+post '/pet/:key/clean/?' do
   pet = Pet.first(:api_key => params[:key])
   if pet == nil or params[:email]!= pet.email then
     status(401)
@@ -196,7 +186,7 @@ put '/pet/:key/clean/?' do
 end
 
 # play with the pet
-put '/pet/:key/play/?' do
+post '/pet/:key/play/?' do
   pet = Pet.first(:api_key => params[:key])
   if pet == nil or params[:email]!= pet.email then
     status(401)
