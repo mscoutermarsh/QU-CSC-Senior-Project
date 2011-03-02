@@ -7,7 +7,7 @@ require 'dm-timestamps'
 require 'dm-validations'
 require 'date'
 require 'digest/sha1'
-require 'dm-postgres-adapter'
+#require 'dm-postgres-adapter'
 #require 'logger'
 
 #Dir.mkdir('logs') unless File.exist?('logs')
@@ -24,7 +24,7 @@ require 'dm-postgres-adapter'
 #### pet API
 
 # Import all Models
-Dir.glob("#{Dir.pwd}/models/*.rb") { |m| require "#{m.chomp}" }
+require File.dirname(__FILE__) + '/models/pet.rb'
 
 # Set up database
 DataMapper.setup(:default, ENV['DATABASE_URL'] || "sqlite3://#{Dir.pwd}/pets.db")
@@ -35,7 +35,6 @@ DataMapper.finalize
 # Create the db/tables if they don't exist
 DataMapper::auto_upgrade!
 
-#DataMapper.auto_migrate!
 
 helpers do
 
@@ -96,6 +95,7 @@ helpers do
 
     pet.cleanliness = pet.cleanliness - cleanReduce
 
+
     pet.save
 
   end
@@ -118,7 +118,7 @@ post '/pet/?' do
   if pet.save
     status(201)
 
-    "Created new pet #{pet.name}(#{pet.id}) KEY: #{pet.api_key}\n"
+    pet.api_key
   else
     status(412)
   end
@@ -144,10 +144,10 @@ post '/pet/:key/feed/?' do
     end
 
     # eating makes pet dirtier
-    if pet.cleanliness < 5 then
+    if pet.cleanliness < 10 then
       pet.cleanliness = 0
     else
-      pet.cleanliness = pet.cleanliness - 5
+      pet.cleanliness = pet.cleanliness - 10
     end
 
     pet.lastFed = DateTime.now()
@@ -192,13 +192,8 @@ post '/pet/:key/play/?' do
     status(401)
 
   else
-    # playing with pet increases mood by 25
+    # playing with pet increases mood
     # Also - makes pet dirtier and more hungry.
-    if pet.mood < 75 then
-      pet.mood = pet.mood + 25
-    else
-      pet.mood = 100
-    end
     if pet.cleanliness > 15 then
       pet.cleanliness = pet.cleanliness - 15
     else
