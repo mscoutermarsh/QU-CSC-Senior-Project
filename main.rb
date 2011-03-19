@@ -7,7 +7,7 @@ require 'dm-timestamps'
 require 'dm-validations'
 require 'date'
 require 'digest/sha1'
-#require 'dm-postgres-adapter'
+require 'dm-postgres-adapter'
 #require 'logger'
 
 #Dir.mkdir('logs') unless File.exist?('logs')
