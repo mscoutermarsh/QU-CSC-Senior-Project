@@ -256,7 +256,7 @@ get '/pet/:key/cleanliness/?' do
   else
     updateData(pet)
     content_type :json
-    pet.hunger.to_json
+    pet.cleanliness.to_json
   end
 end
 
