@@ -77,6 +77,7 @@ helpers do
       pet.mood = hungerCleanMood + (50 - moodReduce)
     end
 
+
     ### UPDATE HUNGER
     
     # find last time pet was fed
@@ -85,6 +86,10 @@ helpers do
     hungerReduce = ((minsSince / 10) * 2) # subtract 2 for every 10 mins
     
     pet.hunger = pet.hunger - hungerReduce
+
+    if pet.hunger < 0 then
+      pet.hunger = 0
+    end
     
     ### UPDATE CLEANLINESS
 
@@ -94,6 +99,10 @@ helpers do
     cleanReduce = ((minsSince / 20) * 2) # subtract 2 for every 20 mins
 
     pet.cleanliness = pet.cleanliness - cleanReduce
+
+    if pet.cleanliness < 0 then
+      pet.cleanliness = 0
+    end
 
 
     pet.save
