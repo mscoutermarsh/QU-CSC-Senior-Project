@@ -79,24 +79,24 @@ helpers do
 
 
     ### UPDATE HUNGER
-    
+
     # find last time pet was fed
     minsSince = ((today - pet.lastFed) * 24 *60).to_i
-    
-    hungerReduce = ((minsSince / 10) * 2) # subtract 2 for every 10 mins
-    
+
+    hungerReduce = ((minsSince / 20) * 2) # subtract 2 for every 20 mins
+
     pet.hunger = pet.hunger - hungerReduce
 
     if pet.hunger < 0 then
       pet.hunger = 0
     end
-    
+
     ### UPDATE CLEANLINESS
 
     # find last time pet was cleaned
     minsSince = ((today - pet.lastCleaned) * 24 *60).to_i
 
-    cleanReduce = ((minsSince / 20) * 2) # subtract 2 for every 20 mins
+    cleanReduce = ((minsSince / 25) * 2) # subtract 2 for every 25 mins
 
     pet.cleanliness = pet.cleanliness - cleanReduce
 
@@ -153,14 +153,10 @@ post '/pet/:key/feed/?' do
     end
 
     # eating makes pet dirtier
-    if pet.cleanliness < 10 then
-      pet.cleanliness = 0
-    else
-      pet.cleanliness = pet.cleanliness - 10
-    end
+    pet.cleanliness = pet.cleanliness - 10
 
     pet.lastFed = DateTime.now()
-    
+
     pet.save
 
     status(202)
@@ -203,16 +199,8 @@ post '/pet/:key/play/?' do
   else
     # playing with pet increases mood
     # Also - makes pet dirtier and more hungry.
-    if pet.cleanliness > 15 then
-      pet.cleanliness = pet.cleanliness - 15
-    else
-      pet.cleanliness = 0
-    end
-    if pet.hunger > 15 then
-      pet.hunger = pet.hunger - 15
-    else
-      pet.hunger = 0
-    end
+    pet.cleanliness = pet.cleanliness - 5
+    pet.hunger = pet.hunger - 5
 
     pet.lastPlayedWith = DateTime.now()
 
