@@ -7,7 +7,7 @@ class Pet
   include DataMapper::Resource
 
   property :name, String, :required => true
-  property :color, String, :required => true
+  property :level, Integer, :required => true
   property :hunger, Integer, :default => 75
   property :mood, Integer, :default => 75
   property :alive, Boolean, :default => true
@@ -30,7 +30,7 @@ class Pet
       :format    => 'Does not look like an email address to me ...'
     }
 
-  validates_presence_of :name, :api_key, :color, :email
+  validates_presence_of :name, :api_key, :level, :email
   validates_numericality_of :mood, :only_integer => true, :greater_than_or_equal_to => 0,
                             :less_that_or_equal_to => 100
   validates_numericality_of :hunger, :only_integer => true, :greater_than_or_equal_to => 0,

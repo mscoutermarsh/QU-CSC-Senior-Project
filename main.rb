@@ -69,7 +69,7 @@ helpers do
 
     hungerCleanMood = (pet.cleanliness/4)+(pet.hunger/4)
 
-    moodReduce = ((minsSince / 10) * 2) # subtract 2 for every 10 mins
+    moodReduce = ((minsSince / 20) * (pet.level * 2)) # subtract 2 for every 20 mins
 
     if moodReduce > 100 then
       pet.mood = 0
@@ -83,7 +83,7 @@ helpers do
     # find last time pet was fed
     minsSince = ((today - pet.lastFed) * 24 *60).to_i
 
-    hungerReduce = ((minsSince / 20) * 2) # subtract 2 for every 20 mins
+    hungerReduce = ((minsSince / 20) * (pet.level*2)) # subtract level for every 20 mins
 
     pet.hunger = pet.hunger - hungerReduce
 
@@ -96,7 +96,7 @@ helpers do
     # find last time pet was cleaned
     minsSince = ((today - pet.lastCleaned) * 24 *60).to_i
 
-    cleanReduce = ((minsSince / 25) * 2) # subtract 2 for every 25 mins
+    cleanReduce = ((minsSince / 25) * (pet.level * 2)) # subtract level for every 25 mins
 
     pet.cleanliness = pet.cleanliness - cleanReduce
 
@@ -117,12 +117,12 @@ end
 # Create pet
 #
 
-# name and color required to create pet
+# name and level required to create pet
 post '/pet/?' do
   #gen new API key
   api_key = Digest::SHA1.hexdigest(Time.now.to_s + rand(12341234).to_s)[1..12]
 
-  pet = Pet.new(:name => params[:name],:color=> params[:color],:email=>params[:email], :api_key => api_key, :lastFed => DateTime.now(), :lastCleaned => DateTime.now(), :lastPlayedWith => DateTime.now()  )
+  pet = Pet.new(:name => params[:name],:level=> params[:level],:email=>params[:email], :api_key => api_key, :lastFed => DateTime.now(), :lastCleaned => DateTime.now(), :lastPlayedWith => DateTime.now()  )
 
   if pet.save
     status(201)
