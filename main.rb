@@ -145,6 +145,10 @@ post '/pet/:key/feed/?' do
     status(401)
 
   else
+    if pet.alive == false then
+      status(410)
+      "Pet is dead"
+    else
 
     if pet.hunger < 100 then
       if pet.hunger < 50 then
@@ -165,6 +169,7 @@ post '/pet/:key/feed/?' do
     pet.save
 
     status(202)
+    end
   end
 end
 
@@ -175,7 +180,10 @@ post '/pet/:key/clean/?' do
     status(401)
 
   else
-
+    if pet.alive == false then
+      status(410)
+      "Pet is dead"
+    else
     if pet.cleanliness < 100 then
       if pet.cleanliness < 50 then
         pet.cleanliness = pet.cleanliness + 50
@@ -192,6 +200,7 @@ post '/pet/:key/clean/?' do
     pet.save
 
     status(202)
+    end
   end
 end
 
@@ -202,16 +211,21 @@ post '/pet/:key/play/?' do
     status(401)
 
   else
-    # playing with pet increases mood
-    # Also - makes pet dirtier and more hungry.
-    pet.cleanliness = pet.cleanliness - 5
-    pet.hunger = pet.hunger - 5
+    if pet.alive == false then
+      status(410)
+      "Pet is dead"
+    else
+      # playing with pet increases mood
+      # Also - makes pet dirtier and more hungry.
+      pet.cleanliness = pet.cleanliness - 5
+      pet.hunger = pet.hunger - 5
 
-    pet.lastPlayedWith = DateTime.now()
+      pet.lastPlayedWith = DateTime.now()
 
-    pet.save
+      pet.save
 
-    status(202)
+      status(202)
+    end
   end
 end
 
@@ -226,7 +240,7 @@ get '/pets/?' do
   @pets.to_json
 end
 
-# return all of pets data
+# return all of pet attributes data
 get '/pet/:key/?' do
   pet = Pet.first(:api_key => params[:key])
   if pet == nil then
@@ -235,7 +249,7 @@ get '/pet/:key/?' do
   else
     updateData(pet)
     content_type :json
-    pet.to_json
+    pet.to_json(:only => [:mood, :alive, :hunger, :cleanliness])
   end
 end
 
@@ -302,6 +316,18 @@ get '/pet/:key/alive/?' do
     updateData(pet)
     content_type :json
     pet.alive.to_json
+  end
+end
+
+# return pets level
+get '/pet/:key/level/?' do
+  pet = Pet.first(:api_key => params[:key])
+  if pet == nil then
+    status(404)
+
+  else
+    content_type :json
+    pet.level.to_json
   end
 end
 
