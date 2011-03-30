@@ -104,6 +104,11 @@ helpers do
       pet.cleanliness = 0
     end
 
+    if pet.cleanliness = 0 and pet.hunger = 0 and pet.mood = 0 then
+      # pet is dead :-(
+      pet.alive = false
+    end
+
 
     pet.save
 
@@ -284,6 +289,19 @@ get '/pet/:key/mood/?' do
     updateData(pet)
     content_type :json
     pet.mood.to_json
+  end
+end
+
+# return if pet is alive
+get '/pet/:key/alive/?' do
+  pet = Pet.first(:api_key => params[:key])
+  if pet == nil then
+    status(404)
+
+  else
+    updateData(pet)
+    content_type :json
+    pet.alive.to_json
   end
 end
 

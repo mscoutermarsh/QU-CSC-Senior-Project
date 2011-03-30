@@ -22,6 +22,7 @@ class Pet
   property :lastFed, DateTime
   property :lastCleaned, DateTime
   property :lastPlayedWith, DateTime
+  property :alive, Boolean, :default => true
   property :email, String, :required => true,
     :format   => :email_address,
     :messages => {
@@ -35,6 +36,8 @@ class Pet
                             :less_that_or_equal_to => 100
   validates_numericality_of :hunger, :only_integer => true, :greater_than_or_equal_to => 0,
                             :less_that_or_equal_to => 100
+  validates_numericality_of :level, :only_integer => true, :greater_than_or_equal_to => 1,
+                            :less_that_or_equal_to => 10
   validates_numericality_of :cleanliness, :only_integer => true, :greater_than_or_equal_to => 0,
                             :less_that_or_equal_to => 100
 
