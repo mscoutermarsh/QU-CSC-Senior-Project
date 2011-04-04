@@ -69,7 +69,7 @@ helpers do
 
     hungerCleanMood = (pet.cleanliness/4)+(pet.hunger/4)
 
-    moodReduce = ((minsSince / 20) * (pet.level * 2)) # subtract 2 for every 20 mins
+    moodReduce = ((minsSince / 30) * (pet.level * 2)) # subtract level for every 30 mins
 
     if moodReduce > 100 then
       pet.mood = 0
@@ -104,7 +104,7 @@ helpers do
       pet.cleanliness = 0
     end
 
-    if pet.cleanliness = 0 and pet.hunger = 0 and pet.mood = 0 then
+    if pet.cleanliness == 0 and pet.hunger == 0 and pet.mood == 0 then
       # pet is dead :-(
       pet.alive = false
     end
