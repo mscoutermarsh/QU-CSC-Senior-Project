@@ -249,7 +249,7 @@ get '/pet/:key/?' do
   else
     updateData(pet)
     content_type :json
-    pet.all().to_json(:only => [:mood, :alive, :hunger, :cleanliness])
+    pet.to_json(:only => [:mood, :alive, :hunger, :cleanliness])
   end
 end
 
