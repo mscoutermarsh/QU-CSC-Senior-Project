@@ -49,6 +49,11 @@ If you receive a 401 - Unauthorized error. Then either the KEY or email address 
 ### Play
 `Post: http://localhost:4567/pet/key/play?email=email@address.com`
 
+### Rejuvenate
+`Post: http://localhost:4567/pet/key/rejuvenate?email=email@address.com`
+
+-Brings pet back from the dead. Sets attributes to 100.
+
 
 
 GET
@@ -59,10 +64,10 @@ GET
 
 -Returns ALL pet data for every pet in json.
 
-#### All data for specific pet
+#### Hunger, cleanliness, mood and alive for a specific pet
 `Get: http://localhost:4567/pet/key`
 
--Returns all of the pets data.
+-Returns basic attributes in json.
 
 #### Hunger
 `Get: http://localhost:4567/pets/key/hunger`

@@ -154,25 +154,25 @@ post '/pet/:key/feed/?' do
       "Pet is dead"
     else
 
-    if pet.hunger < 100 then
-      if pet.hunger < 50 then
-        pet.hunger = pet.hunger + 50
-      else if pet.hunger < 75 then
-          pet.hunger = pet.hunger + 25
-        else
-          pet.hunger = 100
+      if pet.hunger < 100 then
+        if pet.hunger < 50 then
+          pet.hunger = pet.hunger + 50
+        else if pet.hunger < 75 then
+            pet.hunger = pet.hunger + 25
+          else
+            pet.hunger = 100
+          end
         end
       end
-    end
 
-    # eating makes pet dirtier
-    pet.cleanliness = pet.cleanliness - 10
+      # eating makes pet dirtier
+      pet.cleanliness = pet.cleanliness - 10
 
-    pet.lastFed = DateTime.now()
+      pet.lastFed = DateTime.now()
 
-    pet.save
+      pet.save
 
-    status(202)
+      status(202)
     end
   end
 end
@@ -188,22 +188,22 @@ post '/pet/:key/clean/?' do
       status(410)
       "Pet is dead"
     else
-    if pet.cleanliness < 100 then
-      if pet.cleanliness < 50 then
-        pet.cleanliness = pet.cleanliness + 50
-      else if pet.cleanliness < 75 then
-          pet.cleanliness = pet.cleanliness + 25
-        else
-          pet.cleanliness = 100
+      if pet.cleanliness < 100 then
+        if pet.cleanliness < 50 then
+          pet.cleanliness = pet.cleanliness + 50
+        else if pet.cleanliness < 75 then
+            pet.cleanliness = pet.cleanliness + 25
+          else
+            pet.cleanliness = 100
+          end
         end
       end
-    end
 
-    pet.lastCleaned = DateTime.now()
+      pet.lastCleaned = DateTime.now()
 
-    pet.save
+      pet.save
 
-    status(202)
+      status(202)
     end
   end
 end
@@ -230,6 +230,27 @@ post '/pet/:key/play/?' do
 
       status(202)
     end
+  end
+end
+
+# Rejuvenate - if pet is dead. Revive and set attributes to 100.
+post '/pet/:key/rejuvenate/?' do
+  pet = Pet.first(:api_key => params[:key])
+  if pet == nil or params[:email]!= pet.email then
+    status(401)
+
+  else
+    pet.cleanliness = 100
+    pet.hunger = 100
+    pet.alive = true
+
+    pet.lastPlayedWith = DateTime.now()
+    pet.lastFed = DateTime.now()
+    pet.lastCleaned = DateTime.now()
+
+    pet.save
+
+    status(202)
   end
 end
 
