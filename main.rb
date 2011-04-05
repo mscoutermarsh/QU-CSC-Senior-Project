@@ -111,9 +111,9 @@ helpers do
 
     # since we just reduced attributes... update time stamps so that
     # they are not reduced again if updateData is called.
-    pet.lastFed = Datetime.now()
-    pet.lastCleaned = Datetime.now()
-    pet.lastPlayedwith = Datetime.now()
+    pet.lastFed = DateTime.now()
+    pet.lastCleaned = DateTime.now()
+    pet.lastPlayedwith = DateTime.now()
 
 
     pet.save
