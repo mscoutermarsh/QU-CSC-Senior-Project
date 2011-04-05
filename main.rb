@@ -249,7 +249,7 @@ get '/pet/:key/?' do
   else
     updateData(pet)
     content_type :json
-    pet.to_json(:only => [:mood, :alive, :hunger, :cleanliness, :age])
+     pet.attributes.merge[:age => 99].to_json(:only => [:mood, :alive, :hunger, :cleanliness, :age])
   end
 end
 
