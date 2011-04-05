@@ -113,8 +113,6 @@ helpers do
     # they are not reduced again if updateData is called.
     pet.lastFed = DateTime.now()
     pet.lastCleaned = DateTime.now()
-    pet.lastPlayedWith = DateTime.now()
-
 
     pet.save
 
