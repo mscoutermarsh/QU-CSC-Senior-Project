@@ -14,27 +14,27 @@ describe 'main' do
 
   # attempt to create invalid pets
   it 'should fail - invalid email' do
-    post '/pet', { :email => "test.com", :name=>"Mike", :color=>"Blue" }
+    post '/pet', { :email => "test.com", :name=>"Mike", :level=>1 }
     last_response.status.should == 412
   end
 
   it 'should fail - missing email' do
-    post '/pet', { :name=>"Mike", :color=>"Blue" }
+    post '/pet', { :name=>"Mike", :level=>1 }
     last_response.status.should == 412
   end
 
   it 'should fail - missing name' do
-    post '/pet', {:email=>"riza@zinkus.com", :color=>"Blue" }
+    post '/pet', {:email=>"riza@zinkus.com", :level=>1 }
     last_response.status.should == 412
   end
 
-  it 'should fail - missing color' do
+  it 'should fail - missing level' do
     post '/pet', {:email=>"riza@zinkus.com", :name=>"Robin"}
     last_response.status.should == 412
   end
 
   it 'should return API Key' do
-    post '/pet', {:email=>"riza@zinkus.com", :name=>"Robin", :color=>"Blue"}
+    post '/pet', {:email=>"riza@zinkus.com", :name=>"Robin", :level=>1}
     last_response.status.should == 201
     # apikey is 12 chars
     last_response.body.length.should == 12
@@ -109,6 +109,12 @@ describe 'main' do
     get "/pet/#{$apiKey}/hunger/"
     last_response.status.should == 200
     last_response.body.should == "100"
+  end
+
+  it 'should return alive = true' do
+    get "/pet/#{$apiKey}/alive/"
+    last_response.status.should == 200
+    last_response.body.should == "true"
   end
 
   # now... play with the pet. Playing adjusts cleanliness, hunger and mood.
