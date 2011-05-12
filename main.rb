@@ -276,7 +276,7 @@ get '/pet/:key/?' do
     content_type :json
     today = DateTime.now
     theAge = (today - pet.created_at)
-    theAge = ((age * 24 * 60).to_i)
+    theAge = ((theAge * 24 * 60).to_i)
     essentialInfo = {mood=> pet.mood, alive=> pet.alive, hunger=> pet.hunger, cleanliness=> pet.cleanliness, age=>theAge}
     essentialInfo.to_json
   end
