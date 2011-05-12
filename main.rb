@@ -277,7 +277,14 @@ get '/pet/:key/?' do
     today = DateTime.now
     theAge = (today - pet.created_at)
     theAge = ((theAge * 24 * 60).to_i)
-    essentialInfo = {mood=> pet.mood, alive=> pet.alive, hunger=> pet.hunger, cleanliness=> pet.cleanliness, age=>theAge}
+
+    essentialInfo = Hash.new
+
+    essentialInfo["mood"] = pet.mood
+    essentialInfo["alive"] = pet.alive
+    essentialInfo["hunger"] = pet.hunger
+    essentialInfo["cleanliness"] = pet.cleanliness
+    essentialInfo["age"] = theAge
     essentialInfo.to_json
   end
 end
