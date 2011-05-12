@@ -277,7 +277,7 @@ get '/pet/:key/?' do
     age = (today - pet.created_at)
     age = ((age * 24 * 60).to_i)
     content_type :json
-    pet.attributes.merge(:age => age).to_json(:only => [:mood, :alive, :hunger, :cleanliness, :age])
+    pet.attributes.merge({:age => age}).to_json(:only => [:mood, :alive, :hunger, :cleanliness, :age])
   end
 end
 
